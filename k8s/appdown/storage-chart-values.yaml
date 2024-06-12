@@ -1,0 +1,5 @@
+workingDirPVC:
+  name: working-dir-pvc
+  size: 5Gi
+  storageClassName: nfs-client
+  accessMode: ReadWriteMany

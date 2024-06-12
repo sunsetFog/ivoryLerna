@@ -1,0 +1,20 @@
+image:
+  repository: node
+  tag: '16.16.0-alpine'
+
+deployments:
+  - name: $CI_PROJECT_NAME
+    # 当前yaml文件会通过envsubst转义，可结合使用gitlab ci环境变量作为command参数的一部分
+    command: [ "sh", "-c" ]
+    args:
+      - cd $PACKAGE_PATH;
+        yarn start:$ENV_SHORT;
+    resources:
+      limits:
+        memory: 512Mi
+        cpu: 500m
+      requests:
+        memory: 200Mi
+    autoscaling:
+      maxReplicas: 5
+

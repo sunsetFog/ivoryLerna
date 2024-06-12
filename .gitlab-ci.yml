@@ -1,0 +1,838 @@
+include:
+  - project: FE-RD/gitlab-ci
+    # ref 可以是分支名称，或tag名称
+    #ref: v0.0.1
+    ref: master
+    file: simple-app/templates/monorepo-template.gitlab-ci.yml
+
+
+variables:
+  BRAND:
+    description: '指定构建一个或多个package，多个package用逗号分割。可用package关键词yax,bd,tb,ayx,hth,ky,leyu,jn,
+    yax-fullsite,yax-sport,ayx-fullsite,ayx-sport,hth-fullsite,hth-sport,ky-fullsite,ky-sport,leyu-fullsite,leyu-sport,
+    bd-sport,jn-sport,bd-fullsite,tb-sport,tb-fullsite,jn-fullsite。'
+
+# 添加自定义shell逻辑满足边缘场景的定制需求
+.custom-script:
+  script:
+    # 自定义shell函数
+    - >
+
+      # 转换deployment tier环境变量为更短的名称
+
+      env_short () {
+        local yaml="
+            testing: staging
+            staging: uat
+            canary: prod
+            production: prod
+          "
+        echo $(echo "$yaml" | yq ".$1")
+      }
+
+      export ENV_SHORT=$(env_short $DEPLOYMENT_TIER)
+
+      brand_alias () {
+        local yaml="
+            $1: $1
+            yax: yx
+            yax-fullsite: yx-fullsite
+            yax-sport: yx-sport
+          "
+        echo $(echo "$yaml" | yq ".$1")
+      }
+
+      export PACKAGE_PATH="packages/$(brand_alias $JOB_BRAND)"
+
+      # 修改应用构建命令
+
+      interface_script_build () {
+        yarn
+        cd $PACKAGE_PATH
+        yarn build:$ENV_SHORT
+      }
+
+      # 应用启动命令请在 app-chart-values.yaml 文件中 deployments[].command 配置，可使用gitlab ci环境变量
+
+################### yax pipeline
+
+.yax-general-job-config:
+  variables:
+    JOB_BRAND: yax
+
+yax-source:
+  extends:
+    - .source
+    - .yax-general-job-config
+yax-build:
+  needs:
+    - yax-source
+  extends:
+    - .build
+    - .yax-general-job-config
+yax-deploy:
+  needs:
+    - yax-build
+  extends:
+    - .deploy
+    - .yax-general-job-config
+yax-cleanup:
+  needs:
+    - yax-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .yax-general-job-config
+
+################### yax-fullsite pipeline
+
+.yax-fullsite-general-job-config:
+  variables:
+    JOB_BRAND: yax-fullsite
+
+yax-fullsite-source:
+  extends:
+    - .source
+    - .yax-fullsite-general-job-config
+yax-fullsite-build:
+  needs:
+    - yax-fullsite-source
+  extends:
+    - .build
+    - .yax-fullsite-general-job-config
+yax-fullsite-deploy:
+  needs:
+    - yax-fullsite-build
+  extends:
+    - .deploy
+    - .yax-fullsite-general-job-config
+yax-fullsite-cleanup:
+  needs:
+    - yax-fullsite-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .yax-fullsite-general-job-config
+
+################### yax-sport pipeline
+
+.yax-sport-general-job-config:
+  variables:
+    JOB_BRAND: yax-sport
+
+yax-sport-source:
+  extends:
+    - .source
+    - .yax-sport-general-job-config
+yax-sport-build:
+  needs:
+    - yax-sport-source
+  extends:
+    - .build
+    - .yax-sport-general-job-config
+yax-sport-deploy:
+  needs:
+    - yax-sport-build
+  extends:
+    - .deploy
+    - .yax-sport-general-job-config
+yax-sport-cleanup:
+  needs:
+    - yax-sport-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .yax-sport-general-job-config
+
+################### ayx pipeline
+
+.ayx-general-job-config:
+  variables:
+    JOB_BRAND: ayx
+
+ayx-source:
+  extends:
+    - .source
+    - .ayx-general-job-config
+ayx-build:
+  needs:
+    - ayx-source
+  extends:
+    - .build
+    - .ayx-general-job-config
+ayx-deploy:
+  needs:
+    - ayx-build
+  extends:
+    - .deploy
+    - .ayx-general-job-config
+ayx-cleanup:
+  needs:
+    - ayx-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .ayx-general-job-config
+
+################### ayx-fullsite pipeline
+
+.ayx-fullsite-general-job-config:
+  variables:
+    JOB_BRAND: ayx-fullsite
+
+ayx-fullsite-source:
+  extends:
+    - .source
+    - .ayx-fullsite-general-job-config
+ayx-fullsite-build:
+  needs:
+    - ayx-fullsite-source
+  extends:
+    - .build
+    - .ayx-fullsite-general-job-config
+ayx-fullsite-deploy:
+  needs:
+    - ayx-fullsite-build
+  extends:
+    - .deploy
+    - .ayx-fullsite-general-job-config
+ayx-fullsite-cleanup:
+  needs:
+    - ayx-fullsite-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .ayx-fullsite-general-job-config
+
+################### ayx-sport pipeline
+
+.ayx-sport-general-job-config:
+  variables:
+    JOB_BRAND: ayx-sport
+
+ayx-sport-source:
+  extends:
+    - .source
+    - .ayx-sport-general-job-config
+ayx-sport-build:
+  needs:
+    - ayx-sport-source
+  extends:
+    - .build
+    - .ayx-sport-general-job-config
+ayx-sport-deploy:
+  needs:
+    - ayx-sport-build
+  extends:
+    - .deploy
+    - .ayx-sport-general-job-config
+ayx-sport-cleanup:
+  needs:
+    - ayx-sport-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .ayx-sport-general-job-config
+
+################### bd pipeline
+
+.bd-general-job-config:
+  variables:
+    JOB_BRAND: bd
+
+bd-source:
+  extends:
+    - .source
+    - .bd-general-job-config
+bd-build:
+  needs:
+    - bd-source
+  extends:
+    - .build
+    - .bd-general-job-config
+bd-deploy:
+  needs:
+    - bd-build
+  extends:
+    - .deploy
+    - .bd-general-job-config
+bd-cleanup:
+  needs:
+    - bd-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .bd-general-job-config
+
+################### bd-fullsite pipeline
+
+.bd-fullsite-general-job-config:
+  variables:
+    JOB_BRAND: bd-fullsite
+
+bd-fullsite-source:
+  extends:
+    - .source
+    - .bd-fullsite-general-job-config
+bd-fullsite-build:
+  needs:
+    - bd-fullsite-source
+  extends:
+    - .build
+    - .bd-fullsite-general-job-config
+bd-fullsite-deploy:
+  needs:
+    - bd-fullsite-build
+  extends:
+    - .deploy
+    - .bd-fullsite-general-job-config
+bd-fullsite-cleanup:
+  needs:
+    - bd-fullsite-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .bd-fullsite-general-job-config
+
+################### bd-sport pipeline
+
+.bd-sport-general-job-config:
+  variables:
+    JOB_BRAND: bd-sport
+
+bd-sport-source:
+  extends:
+    - .source
+    - .bd-sport-general-job-config
+bd-sport-build:
+  needs:
+    - bd-sport-source
+  extends:
+    - .build
+    - .bd-sport-general-job-config
+bd-sport-deploy:
+  needs:
+    - bd-sport-build
+  extends:
+    - .deploy
+    - .bd-sport-general-job-config
+bd-sport-cleanup:
+  needs:
+    - bd-sport-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .bd-sport-general-job-config
+
+################### hth pipeline
+
+.hth-general-job-config:
+  variables:
+    JOB_BRAND: hth
+
+hth-source:
+  extends:
+    - .source
+    - .hth-general-job-config
+hth-build:
+  needs:
+    - hth-source
+  extends:
+    - .build
+    - .hth-general-job-config
+hth-deploy:
+  needs:
+    - hth-build
+  extends:
+    - .deploy
+    - .hth-general-job-config
+hth-cleanup:
+  needs:
+    - hth-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .hth-general-job-config
+
+################### hth-fullsite pipeline
+
+.hth-fullsite-general-job-config:
+  variables:
+    JOB_BRAND: hth-fullsite
+
+hth-fullsite-source:
+  extends:
+    - .source
+    - .hth-fullsite-general-job-config
+hth-fullsite-build:
+  needs:
+    - hth-fullsite-source
+  extends:
+    - .build
+    - .hth-fullsite-general-job-config
+hth-fullsite-deploy:
+  needs:
+    - hth-fullsite-build
+  extends:
+    - .deploy
+    - .hth-fullsite-general-job-config
+hth-fullsite-cleanup:
+  needs:
+    - hth-fullsite-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .hth-fullsite-general-job-config
+
+################### hth-sport pipeline
+
+.hth-sport-general-job-config:
+  variables:
+    JOB_BRAND: hth-sport
+
+hth-sport-source:
+  extends:
+    - .source
+    - .hth-sport-general-job-config
+hth-sport-build:
+  needs:
+    - hth-sport-source
+  extends:
+    - .build
+    - .hth-sport-general-job-config
+hth-sport-deploy:
+  needs:
+    - hth-sport-build
+  extends:
+    - .deploy
+    - .hth-sport-general-job-config
+hth-sport-cleanup:
+  needs:
+    - hth-sport-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .hth-sport-general-job-config
+
+################### ky pipeline
+
+.ky-general-job-config:
+  variables:
+    JOB_BRAND: ky
+
+ky-source:
+  extends:
+    - .source
+    - .ky-general-job-config
+ky-build:
+  needs:
+    - ky-source
+  extends:
+    - .build
+    - .ky-general-job-config
+ky-deploy:
+  needs:
+    - ky-build
+  extends:
+    - .deploy
+    - .ky-general-job-config
+ky-cleanup:
+  needs:
+    - ky-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .ky-general-job-config
+
+################### ky-fullsite pipeline
+
+.ky-fullsite-general-job-config:
+  variables:
+    JOB_BRAND: ky-fullsite
+
+ky-fullsite-source:
+  extends:
+    - .source
+    - .ky-fullsite-general-job-config
+ky-fullsite-build:
+  needs:
+    - ky-fullsite-source
+  extends:
+    - .build
+    - .ky-fullsite-general-job-config
+ky-fullsite-deploy:
+  needs:
+    - ky-fullsite-build
+  extends:
+    - .deploy
+    - .ky-fullsite-general-job-config
+ky-fullsite-cleanup:
+  needs:
+    - ky-fullsite-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .ky-fullsite-general-job-config
+
+################### ky-sport pipeline
+
+.ky-sport-general-job-config:
+  variables:
+    JOB_BRAND: ky-sport
+
+ky-sport-source:
+  extends:
+    - .source
+    - .ky-sport-general-job-config
+ky-sport-build:
+  needs:
+    - ky-sport-source
+  extends:
+    - .build
+    - .ky-sport-general-job-config
+ky-sport-deploy:
+  needs:
+    - ky-sport-build
+  extends:
+    - .deploy
+    - .ky-sport-general-job-config
+ky-sport-cleanup:
+  needs:
+    - ky-sport-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .ky-sport-general-job-config
+
+################### leyu pipeline
+
+.leyu-general-job-config:
+  variables:
+    JOB_BRAND: leyu
+
+leyu-source:
+  extends:
+    - .source
+    - .leyu-general-job-config
+leyu-build:
+  needs:
+    - leyu-source
+  extends:
+    - .build
+    - .leyu-general-job-config
+leyu-deploy:
+  needs:
+    - leyu-build
+  extends:
+    - .deploy
+    - .leyu-general-job-config
+leyu-cleanup:
+  needs:
+    - leyu-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .leyu-general-job-config
+
+################### leyu-fullsite pipeline
+
+.leyu-fullsite-general-job-config:
+  variables:
+    JOB_BRAND: leyu-fullsite
+
+leyu-fullsite-source:
+  extends:
+    - .source
+    - .leyu-fullsite-general-job-config
+leyu-fullsite-build:
+  needs:
+    - leyu-fullsite-source
+  extends:
+    - .build
+    - .leyu-fullsite-general-job-config
+leyu-fullsite-deploy:
+  needs:
+    - leyu-fullsite-build
+  extends:
+    - .deploy
+    - .leyu-fullsite-general-job-config
+leyu-fullsite-cleanup:
+  needs:
+    - leyu-fullsite-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .leyu-fullsite-general-job-config
+
+################### leyu-sport pipeline
+
+.leyu-sport-general-job-config:
+  variables:
+    JOB_BRAND: leyu-sport
+
+leyu-sport-source:
+  extends:
+    - .source
+    - .leyu-sport-general-job-config
+leyu-sport-build:
+  needs:
+    - leyu-sport-source
+  extends:
+    - .build
+    - .leyu-sport-general-job-config
+leyu-sport-deploy:
+  needs:
+    - leyu-sport-build
+  extends:
+    - .deploy
+    - .leyu-sport-general-job-config
+leyu-sport-cleanup:
+  needs:
+    - leyu-sport-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .leyu-sport-general-job-config
+
+################### tb pipeline
+
+.tb-general-job-config:
+  variables:
+    JOB_BRAND: tb
+
+tb-source:
+  extends:
+    - .source
+    - .tb-general-job-config
+tb-build:
+  needs:
+    - tb-source
+  extends:
+    - .build
+    - .tb-general-job-config
+tb-deploy:
+  needs:
+    - tb-build
+  extends:
+    - .deploy
+    - .tb-general-job-config
+tb-cleanup:
+  needs:
+    - tb-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .tb-general-job-config
+
+################### tb-sport pipeline
+
+.tb-sport-general-job-config:
+  variables:
+    JOB_BRAND: tb-sport
+
+tb-sport-source:
+  extends:
+    - .source
+    - .tb-sport-general-job-config
+tb-sport-build:
+  needs:
+    - tb-sport-source
+  extends:
+    - .build
+    - .tb-sport-general-job-config
+tb-sport-deploy:
+  needs:
+    - tb-sport-build
+  extends:
+    - .deploy
+    - .tb-sport-general-job-config
+tb-sport-cleanup:
+  needs:
+    - tb-sport-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .tb-sport-general-job-config
+
+################### tb-fullsite pipeline
+
+.tb-fullsite-general-job-config:
+  variables:
+    JOB_BRAND: tb-fullsite
+
+tb-fullsite-source:
+  extends:
+    - .source
+    - .tb-fullsite-general-job-config
+tb-fullsite-build:
+  needs:
+    - tb-fullsite-source
+  extends:
+    - .build
+    - .tb-fullsite-general-job-config
+tb-fullsite-deploy:
+  needs:
+    - tb-fullsite-build
+  extends:
+    - .deploy
+    - .tb-fullsite-general-job-config
+tb-fullsite-cleanup:
+  needs:
+    - tb-fullsite-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .tb-fullsite-general-job-config
+
+################### jn pipeline
+
+.jn-general-job-config:
+  variables:
+    JOB_BRAND: jn
+
+jn-source:
+  extends:
+    - .source
+    - .jn-general-job-config
+jn-build:
+  needs:
+    - jn-source
+  extends:
+    - .build
+    - .jn-general-job-config
+jn-deploy:
+  needs:
+    - jn-build
+  extends:
+    - .deploy
+    - .jn-general-job-config
+jn-cleanup:
+  needs:
+    - jn-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .jn-general-job-config
+
+################### jn-sport pipeline
+
+.jn-sport-general-job-config:
+  variables:
+    JOB_BRAND: jn-sport
+
+jn-sport-source:
+  extends:
+    - .source
+    - .jn-sport-general-job-config
+jn-sport-build:
+  needs:
+    - jn-sport-source
+  extends:
+    - .build
+    - .jn-sport-general-job-config
+jn-sport-deploy:
+  needs:
+    - jn-sport-build
+  extends:
+    - .deploy
+    - .jn-sport-general-job-config
+jn-sport-cleanup:
+  needs:
+    - jn-sport-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .jn-sport-general-job-config
+
+################### jn-fullsite pipeline
+
+.jn-fullsite-general-job-config:
+  variables:
+    JOB_BRAND: jn-fullsite
+
+jn-fullsite-source:
+  extends:
+    - .source
+    - .jn-fullsite-general-job-config
+jn-fullsite-build:
+  needs:
+    - jn-fullsite-source
+  extends:
+    - .build
+    - .jn-fullsite-general-job-config
+jn-fullsite-deploy:
+  needs:
+    - jn-fullsite-build
+  extends:
+    - .deploy
+    - .jn-fullsite-general-job-config
+jn-fullsite-cleanup:
+  needs:
+    - jn-fullsite-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .jn-fullsite-general-job-config
+
+################### jy pipeline
+
+.jy-general-job-config:
+  variables:
+    JOB_BRAND: jy
+
+jy-source:
+  extends:
+    - .source
+    - .jy-general-job-config
+jy-build:
+  needs:
+    - jy-source
+  extends:
+    - .build
+    - .jy-general-job-config
+jy-deploy:
+  needs:
+    - jy-build
+  extends:
+    - .deploy
+    - .jy-general-job-config
+jy-cleanup:
+  needs:
+    - jy-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .jn-general-job-config
+
+################### jy-sport pipeline
+
+.jy-sport-general-job-config:
+  variables:
+    JOB_BRAND: jy-sport
+
+jy-sport-source:
+  extends:
+    - .source
+    - .jy-sport-general-job-config
+jy-sport-build:
+  needs:
+    - jy-sport-source
+  extends:
+    - .build
+    - .jy-sport-general-job-config
+jy-sport-deploy:
+  needs:
+    - jy-sport-build
+  extends:
+    - .deploy
+    - .jy-sport-general-job-config
+jy-sport-cleanup:
+  needs:
+    - jy-sport-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .jy-sport-general-job-config
+
+################### jy-fullsite pipeline
+
+.jy-fullsite-general-job-config:
+  variables:
+    JOB_BRAND: jy-fullsite
+
+jy-fullsite-source:
+  extends:
+    - .source
+    - .jy-fullsite-general-job-config
+jy-fullsite-build:
+  needs:
+    - jy-fullsite-source
+  extends:
+    - .build
+    - .jy-fullsite-general-job-config
+jy-fullsite-deploy:
+  needs:
+    - jy-fullsite-build
+  extends:
+    - .deploy
+    - .jy-fullsite-general-job-config
+jy-fullsite-cleanup:
+  needs:
+    - jy-fullsite-deploy
+  extends:
+    - .cleanup-idle-environment
+    - .jy-fullsite-general-job-config

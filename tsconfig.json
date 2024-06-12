@@ -1,0 +1,32 @@
+{
+  "ts-node": {
+    // Make it fast https://typestrong.org/ts-node/docs/performance/
+    "transpileOnly": true,
+    "transpiler": "ts-node/transpilers/swc-experimental",
+    "compilerOptions": {
+      "target": "es6",
+      /**
+       配合ts-node，可以直接gulp or webpack的配置改成ts后缀的文件
+       module改为commonjs是因为 https://github.com/TypeStrong/ts-node#import-statements
+      */
+      "module": "commonjs"
+    }
+  },
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve"
+  },
+  "exclude": ["**/node_modules", "**/dist"]
+}

@@ -1,0 +1,80 @@
+{
+  "name": "monorepo-nextjs",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=14.15"
+  },
+  "scripts": {
+    "clean:nodemudules": "rimraf node_modules & rimraf yarn.lock & rimraf package-lock.json",
+    "打包测试环境至dist下对应项目：": "例如打包bob测试环境，执行 yarn export:bd:dev，部署所需文件为dist/bob目录",
+    "export:bd:dev": "lerna exec --scope @yfront/bd-appdown -- yarn export:staging",
+    "export:bd:release": "lerna exec --scope @yfront/bd-appdown -- yarn export:uat",
+    "export:bd:prod": "lerna exec --scope @yfront/bd-appdown -- yarn export:prod",
+    "export:xk:dev": "lerna exec --scope @yfront/xk-appdown -- yarn export:staging",
+    "export:xk:release": "lerna exec --scope @yfront/xk-appdown -- yarn export:uat",
+    "export:xk:prod": "lerna exec --scope @yfront/xk-appdown -- yarn export:prod",
+    "export:tb:dev": "lerna exec --scope @yfront/tb-appdown -- yarn export:staging",
+    "export:tb:release": "lerna exec --scope @yfront/tb-appdown -- yarn export:uat",
+    "export:tb:prod": "lerna exec --scope @yfront/tb-appdown -- yarn export:prod",
+    "eslint": "eslint --cache --fix",
+    "stylelint": "stylelint --cache --fix --ignore-path .gitignore",
+    "lint:scripts": "yarn eslint .",
+    "lint:styles": "yarn stylelint \"**/*.{css,scss,sass}\"",
+    "prepare": "husky install",
+    "commit": "cz",
+    "lerna:version": "lerna version --no-push --force-git-tag --yes",
+    "postlerna:version": "git push --follow-tags",
+    "push:all": "git remote | xargs -L1 git push --all",
+    "push:all:win": "git-bash -c 'npm run push:all'"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^13.1.0",
+    "@commitlint/config-conventional": "^13.1.0",
+    "@commitlint/config-lerna-scopes": "^13.1.0",
+    "@swc/core": "^1.2.88",
+    "@swc/helpers": "^0.2.13",
+    "@types/node": "^14.15.0",
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
+    "@typescript-eslint/parser": "^4.29.3",
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.1",
+    "husky": ">=6",
+    "lerna": "^4.0.0",
+    "lint-staged": ">=10",
+    "prettier": "^2.3.2",
+    "rimraf": "^3.0.2",
+    "stylelint": "^13.13.1",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-recess-order": "^2.5.0",
+    "stylelint-config-sass-guidelines": "^8.0.0",
+    "stylelint-config-standard": "^22.0.0",
+    "stylelint-no-unsupported-browser-features": "^5.0.1",
+    "stylelint-prettier": "^1.2.0",
+    "sunny-cli-tools": "^0.1.0",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.3"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "yarn eslint",
+    "*.{css,scss,sass}": "yarn stylelint"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "eslintIgnore": [
+    "tyscm.3.1.0.js"
+  ],
+  "volta": {
+    "node": "16.17.0",
+    "yarn": "1.22.19"
+  },
+  "dependencies": {}
+}
