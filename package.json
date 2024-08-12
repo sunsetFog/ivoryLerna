@@ -9,16 +9,12 @@
   },
   "scripts": {
     "clean:nodemudules": "rimraf node_modules & rimraf yarn.lock & rimraf package-lock.json",
+    "start:dev": "lerna exec --scope @ivory/goose -- yarn start:dev",
+    "start:prod": "lerna exec --scope @ivory/goose -- yarn start:prod",
+    "build:dev": "lerna exec --scope @ivory/goose -- yarn build:dev",
+    "build:prod": "lerna exec --scope @ivory/goose -- yarn build:prod",
     "打包测试环境至dist下对应项目：": "例如打包bob测试环境，执行 yarn export:bd:dev，部署所需文件为dist/bob目录",
-    "export:bd:dev": "lerna exec --scope @yfront/bd-appdown -- yarn export:staging",
-    "export:bd:release": "lerna exec --scope @yfront/bd-appdown -- yarn export:uat",
-    "export:bd:prod": "lerna exec --scope @yfront/bd-appdown -- yarn export:prod",
-    "export:xk:dev": "lerna exec --scope @yfront/xk-appdown -- yarn export:staging",
-    "export:xk:release": "lerna exec --scope @yfront/xk-appdown -- yarn export:uat",
-    "export:xk:prod": "lerna exec --scope @yfront/xk-appdown -- yarn export:prod",
-    "export:tb:dev": "lerna exec --scope @yfront/tb-appdown -- yarn export:staging",
-    "export:tb:release": "lerna exec --scope @yfront/tb-appdown -- yarn export:uat",
-    "export:tb:prod": "lerna exec --scope @yfront/tb-appdown -- yarn export:prod",
+    "export:prod": "yarn clear && lerna exec --scope @ivory/goose -- yarn export:prod",
     "eslint": "eslint --cache --fix",
     "stylelint": "stylelint --cache --fix --ignore-path .gitignore",
     "lint:scripts": "yarn eslint .",
@@ -73,7 +69,7 @@
     "tyscm.3.1.0.js"
   ],
   "volta": {
-    "node": "16.17.0",
+    "node": "18.12.0",
     "yarn": "1.22.19"
   },
   "dependencies": {}
