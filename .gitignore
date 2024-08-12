@@ -31,8 +31,6 @@ yarn-error.log*
 # webstorm
 .idea
 
-# eslint cache
-.eslintcache
 
 # stylelint cache
 .stylelintcache
