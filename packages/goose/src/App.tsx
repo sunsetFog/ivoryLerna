@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import FooterUnit from '@ivory/components/footer';
+import FooterUnit from '@ivory/energy/footer';
 
 function App() {
 
