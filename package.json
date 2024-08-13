@@ -53,5 +53,11 @@
     "node": "18.12.0",
     "yarn": "1.22.19"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "注释": "git commit提交信息规范",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
