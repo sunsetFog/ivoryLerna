@@ -1,6 +1,5 @@
 ## 使用monorepo目录结构管理多个功能一致高度品牌化的站点源码
 
-目录结构设计的起点：[multi-zones feature](https://nextjs.org/docs/advanced-features/multi-zones).
 
 ### 目录结构设计要求
 - 能够通过`目录结构提升`扩大`组件/模块`的`文件夹/文件`的共享范围
@@ -30,14 +29,13 @@ components 跨端共享，要求分离与端有关的差异代码
 
 ### 安装依赖
 ```shell
+不推荐
 yarn
+推荐
+npm install
 ```
 
 ### 启动某个站点本地开发服务
-通过IDE的自带的npm scripts陈列功能功能面板进行操作
-- webstorm https://www.jetbrains.com/help/webstorm/npm-tool-window.html
-- vscode https://code.visualstudio.com/updates/v1_23#_npm-script-running
-
 通过命令行操作
 举例启动站点website-h5的开发服务
 ```shell
@@ -53,9 +51,7 @@ yarn commit
 命令干了什么：
 - 调用commitizen提供向导来生成commit message
 
-### 通过IDE插件
-- webstorm: https://plugins.jetbrains.com/plugin/13389-conventional-commit
-- vscode: https://marketplace.visualstudio.com/items?itemName=adam-bender.commit-message-editor
+### 约定式提交规范
 
 无论通过什么途径，都是协助你生成结构化的git commit message
 
@@ -74,16 +70,6 @@ yarn lerna:version
 ## 编码规范
 ### 在代码编辑时启用检查
 
-#### eslint
-插件：
-- webstorm 已经内置，需自行启用
-- vscode https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
-
-可与团队共同商定这些eslint规则
-- 默认每个文件最多不超过300行代码
-- 默认限制每个函数最多50行数
-- 默认限制逻辑块嵌套深度4层
-- 默认限制函数嵌套深度10层
 
 #### stylelint
 插件：
@@ -203,37 +189,4 @@ yarn upgrade-interactive next --latest
 - https://classic.yarnpkg.com/en/docs/cli/upgrade#toc-yarn-upgrade-package-latest-l-caret-tilde-exact-pattern
 - https://classic.yarnpkg.com/lang/en/docs/cli/upgrade-interactive/
 
-## todo
-- [x] monorepo风格，多站点架构
-  - https://nextjs.org/docs/advanced-features/multi-zones
-  - https://classic.yarnpkg.com/blog/2017/08/02/introducing-workspaces/
-  - 方便git lfs大文件存储通过简单的命令远程同步资源文件
-- [x] typescript、ts-node、ts config https://nextjs.org/docs/basic-features/typescript
-- [x] path alias https://nextjs.org/docs/advanced-features/module-path-aliases
-  - 由yarn workspace的symlink给项目内的npm包做了链接
-- [x] sass集成 https://nextjs.org/docs/basic-features/built-in-css-support#sass-support
-- [x] post-css https://nextjs.org/docs/advanced-features/customizing-postcss-config
-  - 无需额外配置
-- [x] 测试、预发、生产环境变量管理
-  - [Env Variable Loading for Different Environments](https://github.com/vercel/next.js/discussions/25764)
-  - [dotenv-flow](https://github.com/kerimdzhanov/dotenv-flow)
-- [ ] 工具类库集成：useSWR请求库、加密解密、响应式图像图像组件
-  - [ ] 根据项目环境定制useSWR
-  - [ ] 迁移接口加密解密模块
-- [x] eslint https://nextjs.org/docs/basic-features/eslint
-  - IDE配置指导文档 https://eslint.org/docs/user-guide/integrations#editors
-  - [x] 与prettier集成
-  - [x] 与next官方eslint规则配置集成
-  - [x] 与typescript lint规则集成
-- [x] prettier
-  - 通过eslint-config-prettier关闭eslint和prettier有冲突的rules
-  - 通过eslint-plugin-prettier让eslint与prettier协同工作，开发者只需在IDE启用eslint。
-- [x] lintstaged
-- [x] conventional commit
-- [x] 集成lerna
-  - [x] 仅通过conventional commit生成版本日志
-- [x] 集成stylelint
-- [x] 启用git lfs大文件存储
-- [x] npm scripts 按需编译站点、按需编译路由
-  - next cli https://nextjs.org/docs/api-reference/cli
-  - https://nextjs.org/docs/api-reference/next.config.js/custom-page-extensions
+
