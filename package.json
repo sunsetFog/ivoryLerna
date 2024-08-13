@@ -45,7 +45,6 @@
     "stylelint-config-standard": "^22.0.0",
     "stylelint-no-unsupported-browser-features": "^5.0.1",
     "stylelint-prettier": "^1.2.0",
-    "sunny-cli-tools": "^0.1.0",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
   },
@@ -53,7 +52,6 @@
     "node": "18.12.0",
     "yarn": "1.22.19"
   },
-  "dependencies": {},
   "注释": "git commit提交信息规范",
   "config": {
     "commitizen": {

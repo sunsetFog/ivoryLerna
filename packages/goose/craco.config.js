@@ -1,4 +1,5 @@
 /*
+yarn下载不了devDependencies依赖？？得用npm下载
 npm install --save-dev path
 npm install --save-dev @craco/craco
 
